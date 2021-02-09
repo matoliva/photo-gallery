@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+
 import { ImagePreviewerComponent } from './components/image-previewer/image-previewer.component';
 
 
@@ -9,7 +11,9 @@ import { ImagePreviewerComponent } from './components/image-previewer/image-prev
     ImagePreviewerComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule
+
   ],
   exports: [
     ImagePreviewerComponent

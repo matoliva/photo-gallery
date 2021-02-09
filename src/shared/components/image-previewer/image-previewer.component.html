@@ -1,1 +1,19 @@
-<p>image-previewer works!</p>
+<div>
+    <input 
+      #inputFile 
+      type="file" 
+      multiple
+      hidden="true"
+      accept=".jpg, .jpeg, .png"
+      (change)="fileInputchange($event)"
+    />
+    <button 
+      mat-fab color="primary"
+      (click)="inputFile.click()"
+      >+
+    </button>
+  
+    <div #images> </div>
+  
+    <button mat-raised-button>Upload</button>
+  </div>
