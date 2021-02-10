@@ -15,7 +15,7 @@ export class ImagePreviewerComponent {
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event) {
-    this.cleanPreviousPreviews();
+    this.cleanPreviews();
     this.createPreviewImages(event);
     this.files.emit(event.target.files);
   }
@@ -26,28 +26,26 @@ export class ImagePreviewerComponent {
     }
   }
 
-  private cleanPreviousPreviews() {
+  private cleanPreviews() {
     if (this.images.nativeElement.hasChildNodes()) {
       this.deleteAllChildNodes(this.images.nativeElement);
     }
   }
 
   private createPreviewImages(event) {
-    for (const fileKey in event.target.files) {
+    for (let i = 0; i < event.target.files.length; i++) {
       const reader: FileReader = new FileReader();
 
-      if (!isNaN(parseInt(fileKey))) {
-        reader.readAsDataURL(event.target.files[fileKey]);
+      reader.readAsDataURL(event.target.files[i]);
 
-        reader.onload = () => {
-          const image: ElementRef = this.renderer.createElement('img');
+      reader.onload = () => {
+        const image: ElementRef = this.renderer.createElement('img');
 
-          this.renderer.setProperty(image, 'src', reader.result);
-          this.renderer.appendChild(this.images.nativeElement, image);
+        this.renderer.setProperty(image, 'src', reader.result);
+        this.renderer.appendChild(this.images.nativeElement, image);
 
-          this.renderer.setStyle(image, 'width', '150px');
-          this.renderer.setStyle(image, 'height', '200px');
-        };
+        this.renderer.setStyle(image, 'width', '150px');
+        this.renderer.setStyle(image, 'height', '200px');
       }
     }
   }
