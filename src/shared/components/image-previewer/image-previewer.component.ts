@@ -13,12 +13,14 @@ export class ImagePreviewerComponent {
   imageError: boolean = false;
 
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
+  allowedFormatsFileReader: string[] = ['image/jpg', 'image/jpeg', 'image/png'];
 
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event) {
+    this.cleanPreviews();
+    
     if (this.isValidImage(event)) {
-      this.cleanPreviews();
       this.createPreviewImages(event);
       this.files.emit(event.target.files);
     }
@@ -45,6 +47,7 @@ export class ImagePreviewerComponent {
 
       reader.onload = () => {
         const image: ElementRef = this.renderer.createElement('img');
+        this.renderer.listen(image, 'click', () => { alert('I was clicked') });
 
         this.renderer.setProperty(image, 'src', reader.result);
         this.renderer.appendChild(this.images.nativeElement, image);
@@ -57,9 +60,9 @@ export class ImagePreviewerComponent {
 
   private isValidImage(event): boolean {
     let files = event.target.files;
-
+    debugger;
     for (let i = 0; i < files.length; i++) {
-      if (!files[i].type.includes('image/jpg', 'image/jpeg', 'image/png')) {
+      if (!this.allowedFormatsFileReader.includes(files[i].type)) {
         this.imageError = true;
         return false;;
       }
