@@ -4,11 +4,13 @@
         type="file" 
         multiple 
         hidden="true" 
-        accept=".jpg, .jpeg, .png"
+        accept="{{ acceptedFormats.toString() }}"
         (change)="fileInputchange($event)" />
     <button 
         class="image-previewer__add-image"
         mat-fab color="primary" 
-        (click)="inputFile.click()"> + </button>
+        (click)="inputFile.click()">
+        <span class="material-icons">add</span>
+    </button>
     <div #images> </div>
 </div>
