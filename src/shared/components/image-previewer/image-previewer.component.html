@@ -1,0 +1,16 @@
+<div class="image-previewer">
+    <input 
+        #inputFile 
+        type="file" 
+        multiple 
+        hidden="true" 
+        accept="{{ acceptedFormats.toString() }}"
+        (change)="fileInputchange($event)" />
+    <button 
+        class="image-previewer__add-image"
+        mat-fab color="primary" 
+        (click)="inputFile.click()">
+        <span class="material-icons">add</span>
+    </button>
+    <div #images> </div>
+</div>

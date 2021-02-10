@@ -1,20 +1,3 @@
-<div>
-  <input 
-    #inputFile 
-    type="file" 
-    multiple
-    hidden="true"
-    accept=".jpg, .jpeg, .png"
-    (change)="fileInputchange($event)"
-  />
-  <button 
-    mat-fab color="primary"
-    (click)="inputFile.click()"
-    >+
-  </button>
-
-  <div #images> </div>
-
-  <button mat-raised-button>Add</button>
-
-</div>
+<app-image-previewer
+  (files)="setFiles($event)"
+></app-image-previewer>
