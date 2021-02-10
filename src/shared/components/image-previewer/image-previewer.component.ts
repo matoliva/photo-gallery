@@ -10,14 +10,18 @@ export class ImagePreviewerComponent {
   @Output() files: EventEmitter<FileReader> = new EventEmitter();
   @ViewChild('images') images: ElementRef;
 
+  imageError: boolean = false;
+
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
 
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event) {
-    this.cleanPreviews();
-    this.createPreviewImages(event);
-    this.files.emit(event.target.files);
+    if (this.isValidImage(event)) {
+      this.cleanPreviews();
+      this.createPreviewImages(event);
+      this.files.emit(event.target.files);
+    }
   }
 
   private deleteAllChildNodes(parentNode): void {
@@ -30,6 +34,7 @@ export class ImagePreviewerComponent {
     if (this.images.nativeElement.hasChildNodes()) {
       this.deleteAllChildNodes(this.images.nativeElement);
     }
+    this.imageError = false;
   }
 
   private createPreviewImages(event) {
@@ -48,5 +53,17 @@ export class ImagePreviewerComponent {
         this.renderer.setStyle(image, 'height', '200px');
       }
     }
+  }
+
+  private isValidImage(event): boolean {
+    let files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      if (!files[i].type.includes('image/jpg', 'image/jpeg', 'image/png')) {
+        this.imageError = true;
+        return false;;
+      }
+    }
+    return true;
   }
 }
