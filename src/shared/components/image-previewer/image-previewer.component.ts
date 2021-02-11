@@ -20,8 +20,6 @@ export class ImagePreviewerComponent {
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event): void {
-    //this.cleanPreviews();
-
     if (this.isValidImage(event)) {
       this.fileReaderArray = this.createPreviewImages(event);
       this.files.emit(this.fileReaderArray);
@@ -49,17 +47,15 @@ export class ImagePreviewerComponent {
 
       reader.onload = () => {
         const image: ElementRef = this.renderer.createElement('img');
+
         this.renderer.listen(image, 'click', () => { this.deletePreview(file.name); });
 
         this.renderer.setProperty(image, 'src', reader.result);
         this.renderer.setProperty(image, 'id', file.name);
+        this.renderer.addClass(image, 'image-previewer__preview');
+
         this.renderer.appendChild(this.images.nativeElement, image);
 
-        this.renderer.setStyle(image, 'width', '75px');
-        this.renderer.setStyle(image, 'height', '100px');
-        this.renderer.setStyle(image, 'opacity', '0.6');
-        this.renderer.setStyle(image, 'cursor', 'pointer');
-        this.renderer.setStyle(image, 'margin', '0.25rem');
       };
       this.readers.push(file);
     }
@@ -78,7 +74,7 @@ export class ImagePreviewerComponent {
       }
     });
 
-    if (indexToRemove || indexToRemove === 0) {
+    if (typeof indexToRemove === 'number') {
       this.fileReaderArray.splice(indexToRemove, 1);
     }
     this.files.emit(this.fileReaderArray);

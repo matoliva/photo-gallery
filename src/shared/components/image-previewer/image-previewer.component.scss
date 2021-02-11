@@ -1,7 +1,37 @@
 .image-previewer {
     width: 100%;
+    position: relative;
+
+    &__images {
+        display: inline-block;
+        &:hover{
+            &::after {
+                position: absolute;
+                content: 'x';
+                bottom: 44px;
+                left: 33px;
+                color: black;
+                font-weight: 600;
+                font-size: 2rem;
+                font-family: Arial, sans-serif;
+            }
+        }
+    }
 
     &__add-image {
+        display: block;
         margin: 0.25rem;
+    }
+
+    &__preview {
+        width: 75px;
+        height: 100px;
+        margin: 0.25rem;
+        opacity: 0.7;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.4;
+        }
     }
 }
