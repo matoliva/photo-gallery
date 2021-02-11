@@ -15,11 +15,12 @@ export class ImagePreviewerComponent {
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
   allowedFormatsFileReader: string[] = ['image/jpg', 'image/jpeg', 'image/png'];
   fileReaderArray;
+  readers: FileReader[] = [];
 
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event): void {
-    this.cleanPreviews();
+    //this.cleanPreviews();
 
     if (this.isValidImage(event)) {
       this.fileReaderArray = this.createPreviewImages(event);
@@ -41,8 +42,6 @@ export class ImagePreviewerComponent {
   }
 
   private createPreviewImages(event): FileReader[] {
-    const readers: FileReader[] = [];
-
     for (const file of event.target.files) {
       const reader = new FileReader();
 
@@ -62,17 +61,17 @@ export class ImagePreviewerComponent {
         this.renderer.setStyle(image, 'cursor', 'pointer');
         this.renderer.setStyle(image, 'margin', '0.25rem');
       };
-      readers.push(file);
+      this.readers.push(file);
     }
-    return readers;
+    return this.readers;
   }
 
   private deletePreview(fileNameToRemove: string): void {
-    let indexToRemove;
+    let indexToRemove: number;
     const parentNode = document.getElementById('images');
     const previewImageNode = document.getElementById(fileNameToRemove);
 
-    this.fileReaderArray.forEach( (file, index) => {
+    this.fileReaderArray.forEach( (file, index: number) => {
       if (file.name === fileNameToRemove) {
         indexToRemove = index;
         this.renderer.removeChild(parentNode, previewImageNode);
