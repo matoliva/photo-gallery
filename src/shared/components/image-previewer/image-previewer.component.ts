@@ -10,14 +10,20 @@ export class ImagePreviewerComponent {
   @Output() files: EventEmitter<FileReader> = new EventEmitter();
   @ViewChild('images') images: ElementRef;
 
+  imageError = false;
+
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
+  allowedFormatsFileReader: string[] = ['image/jpg', 'image/jpeg', 'image/png'];
 
   constructor(private renderer: Renderer2) { }
 
-  fileInputchange(event) {
+  fileInputchange(event): void {
     this.cleanPreviews();
-    this.createPreviewImages(event);
-    this.files.emit(event.target.files);
+
+    if (this.isValidImage(event)) {
+      this.createPreviewImages(event);
+      this.files.emit(event.target.files);
+    }
   }
 
   private deleteAllChildNodes(parentNode): void {
@@ -26,27 +32,41 @@ export class ImagePreviewerComponent {
     }
   }
 
-  private cleanPreviews() {
+  private cleanPreviews(): void {
     if (this.images.nativeElement.hasChildNodes()) {
       this.deleteAllChildNodes(this.images.nativeElement);
     }
+    this.imageError = false;
   }
 
-  private createPreviewImages(event) {
-    for (let i = 0; i < event.target.files.length; i++) {
+  private createPreviewImages(event): void {
+    for (const file of event.target.files) {
       const reader: FileReader = new FileReader();
 
-      reader.readAsDataURL(event.target.files[i]);
+      reader.readAsDataURL(file);
 
       reader.onload = () => {
         const image: ElementRef = this.renderer.createElement('img');
+        this.renderer.listen(image, 'click', () => { alert('I was clicked'); });
 
         this.renderer.setProperty(image, 'src', reader.result);
         this.renderer.appendChild(this.images.nativeElement, image);
 
         this.renderer.setStyle(image, 'width', '150px');
         this.renderer.setStyle(image, 'height', '200px');
+      };
+    }
+  }
+
+  private isValidImage(event): boolean {
+    const files = event.target.files;
+
+    for (const file of files) {
+      if (!this.allowedFormatsFileReader.includes(file.type)) {
+        this.imageError = true;
+        return false;
       }
     }
+    return true;
   }
 }

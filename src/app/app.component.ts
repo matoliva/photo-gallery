@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  setFiles(event) {
+  setFiles(event): void {
     console.log(event);
   }
 }
