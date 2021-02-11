@@ -7,22 +7,22 @@ import { Component, ViewChild, ElementRef, Renderer2, Output, EventEmitter } fro
 })
 export class ImagePreviewerComponent {
 
-  @Output() files: EventEmitter<FileReader> = new EventEmitter();
+  @Output() files: EventEmitter<FileReader[]> = new EventEmitter();
   @ViewChild('images') images: ElementRef;
 
   imageError = false;
 
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
   allowedFormatsFileReader: string[] = ['image/jpg', 'image/jpeg', 'image/png'];
+  fileReaderArray;
+  readers: FileReader[] = [];
 
   constructor(private renderer: Renderer2) { }
 
   fileInputchange(event): void {
-    this.cleanPreviews();
-
     if (this.isValidImage(event)) {
-      this.createPreviewImages(event);
-      this.files.emit(event.target.files);
+      this.fileReaderArray = this.createPreviewImages(event);
+      this.files.emit(this.fileReaderArray);
     }
   }
 
@@ -39,23 +39,45 @@ export class ImagePreviewerComponent {
     this.imageError = false;
   }
 
-  private createPreviewImages(event): void {
+  private createPreviewImages(event): FileReader[] {
     for (const file of event.target.files) {
-      const reader: FileReader = new FileReader();
+      const reader = new FileReader();
 
       reader.readAsDataURL(file);
 
       reader.onload = () => {
         const image: ElementRef = this.renderer.createElement('img');
-        this.renderer.listen(image, 'click', () => { alert('I was clicked'); });
+
+        this.renderer.listen(image, 'click', () => { this.deletePreview(file.name); });
 
         this.renderer.setProperty(image, 'src', reader.result);
+        this.renderer.setProperty(image, 'id', file.name);
+        this.renderer.addClass(image, 'image-previewer__preview');
+
         this.renderer.appendChild(this.images.nativeElement, image);
 
-        this.renderer.setStyle(image, 'width', '150px');
-        this.renderer.setStyle(image, 'height', '200px');
       };
+      this.readers.push(file);
     }
+    return this.readers;
+  }
+
+  private deletePreview(fileNameToRemove: string): void {
+    let indexToRemove: number;
+    const parentNode = document.getElementById('images');
+    const previewImageNode = document.getElementById(fileNameToRemove);
+
+    this.fileReaderArray.forEach( (file, index: number) => {
+      if (file.name === fileNameToRemove) {
+        indexToRemove = index;
+        this.renderer.removeChild(parentNode, previewImageNode);
+      }
+    });
+
+    if (typeof indexToRemove === 'number') {
+      this.fileReaderArray.splice(indexToRemove, 1);
+    }
+    this.files.emit(this.fileReaderArray);
   }
 
   private isValidImage(event): boolean {
