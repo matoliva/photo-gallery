@@ -19,7 +19,7 @@ import { ImagesContainerComponent } from './components/images-container/images-c
     SharedModule,
     AngularFireModule.initializeApp(environment.firebaseConfig, 'photo-gallery'),
     AngularFireStorageModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

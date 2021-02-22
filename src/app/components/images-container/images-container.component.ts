@@ -12,7 +12,7 @@ export class ImagesContainerComponent {
   public formFile = new FormGroup({
     file: new FormControl(null, Validators.required),
   });
-  
+
   public fileMessage = 'There is no selected file';
   public formData = new FormData();
   public fileName = '';
@@ -23,23 +23,23 @@ export class ImagesContainerComponent {
   constructor(private firebaseStorage: FirestoreService) {
   }
 
-  public setFiles(event) {
+  public setFiles(event): void {
     if (event.length > 0) {
       for (let i = 0; i < event.length; i++) {
         this.fileMessage = `Archivo preparado: ${event[i].name}`;
         this.fileName = event[i].name;
         this.formData.delete('file');
-        this.formData.append('file', event[i], event[i].name)
+        this.formData.append('file', event[i], event[i].name);
       }
     } else {
       this.fileMessage = 'No hay un archivo seleccionado';
     }
   }
 
-  public fileUpload() {
-    let file = this.formData.get('file');
-    let referencia = this.firebaseStorage.cloudStorageRef(this.fileName);
-    let tarea = this.firebaseStorage.cloudStorageTask(this.fileName, file);
+  public fileUpload(): void {
+    const file = this.formData.get('file');
+    const referencia = this.firebaseStorage.cloudStorageRef(this.fileName);
+    const tarea = this.firebaseStorage.cloudStorageTask(this.fileName, file);
   }
 
 }
