@@ -1,0 +1,4 @@
+<form [formGroup]="formFile">
+    <app-image-previewer (files)="setFiles($event)"></app-image-previewer>
+    <button (click)="fileUpload()">file upload</button>
+</form>

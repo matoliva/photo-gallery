@@ -1,0 +1,20 @@
+import { Injectable } from '@angular/core';
+import { AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask } from '@angular/fire/storage';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FirestoreService {
+
+  constructor(
+    private storage: AngularFireStorage
+  ) { }
+
+  public cloudStorageTask(fileName: string, data: any): AngularFireUploadTask {
+    return this.storage.upload(fileName, data);
+  }
+
+  public cloudStorageRef(fileName: string): AngularFireStorageReference {
+    return this.storage.ref(fileName);
+  }
+}
