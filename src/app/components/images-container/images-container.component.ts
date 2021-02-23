@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-images-container',
@@ -22,7 +23,10 @@ export class ImagesContainerComponent implements OnInit {
   public percent = 0;
   public finalized = false;
 
-  constructor(private firebaseStorage: FirestoreService) {
+  constructor(
+    private firebaseStorage: FirestoreService,
+    private _snackBar: MatSnackBar
+  ) {
   }
 
   ngOnInit(): void {
@@ -53,14 +57,23 @@ export class ImagesContainerComponent implements OnInit {
       response.items.forEach(folderRef => {
         this.displayImage(folderRef);
       });
-    });
+    },
+      (error) => {
+        this.openSnackBar(error.error, 'close');
+      });
   }
 
   private displayImage(imageRef): void {
     imageRef.getDownloadURL().then((url: string) => {
       this.imageUrls.push(url);
     }).catch(error => {
-      console.log(error);
+      this.openSnackBar(error.error, 'close');
+    });
+  }
+
+  public openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 5000,
     });
   }
 

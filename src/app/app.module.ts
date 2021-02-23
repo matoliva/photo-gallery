@@ -8,6 +8,8 @@ import { environment } from 'src/environments/environment';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ImagesContainerComponent } from './components/images-container/images-container.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,10 @@ import { ImagesContainerComponent } from './components/images-container/images-c
     SharedModule,
     AngularFireModule.initializeApp(environment.firebaseConfig, 'photo-gallery'),
     AngularFireStorageModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule,
+    BrowserAnimationsModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
