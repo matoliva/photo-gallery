@@ -2,3 +2,12 @@
     <app-image-previewer (files)="setFiles($event)"></app-image-previewer>
     <button (click)="fileUpload()">file upload</button>
 </form>
+
+<div class="images">
+    <div *ngFor="let url of imageUrls">
+        <img 
+            [src]="url"
+            [ngStyle]="{'background-image':'url(' + url + ')', 'background-size':'cover'}"
+            alt="image">
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirestoreService } from 'src/app/services/firestore.service';
 
@@ -7,7 +7,9 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   templateUrl: './images-container.component.html',
   styleUrls: ['./images-container.component.scss']
 })
-export class ImagesContainerComponent {
+export class ImagesContainerComponent implements OnInit {
+
+  imageUrls: string[] = [];
 
   public formFile = new FormGroup({
     file: new FormControl(null, Validators.required),
@@ -23,16 +25,20 @@ export class ImagesContainerComponent {
   constructor(private firebaseStorage: FirestoreService) {
   }
 
+  ngOnInit(): void {
+    this.getImages();
+  }
+
   public setFiles(event): void {
     if (event.length > 0) {
-      for (let i = 0; i < event.length; i++) {
-        this.fileMessage = `Archivo preparado: ${event[i].name}`;
-        this.fileName = event[i].name;
+      for (let file of event) {
+        this.fileMessage = `Ready File: ${file.name}`;
+        this.fileName = file.name;
         this.formData.delete('file');
-        this.formData.append('file', event[i], event[i].name);
+        this.formData.append('file', file, file.name);
       }
     } else {
-      this.fileMessage = 'No hay un archivo seleccionado';
+      this.fileMessage = ' there is no selected file';
     }
   }
 
@@ -40,6 +46,22 @@ export class ImagesContainerComponent {
     const file = this.formData.get('file');
     const referencia = this.firebaseStorage.cloudStorageRef(this.fileName);
     const tarea = this.firebaseStorage.cloudStorageTask(this.fileName, file);
+  }
+
+  public getImages(): void {
+    this.firebaseStorage.getImagesCloudStorage().subscribe(response => {
+      response.items.forEach(folderRef => {
+        this.displayImage(folderRef);
+      });
+    });
+  }
+
+  private displayImage(imageRef): void {
+    imageRef.getDownloadURL().then((url: string) => {
+      this.imageUrls.push(url);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
 }
