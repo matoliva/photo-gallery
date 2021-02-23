@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ImagePreviewerComponent } from 'src/shared/components/image-previewer/image-previewer.component';
 
 @Component({
   selector: 'app-images-container',
@@ -12,20 +13,10 @@ export class ImagesContainerComponent implements OnInit {
 
   imageUrls: string[] = [];
 
-  public formFile = new FormGroup({
-    file: new FormControl(null, Validators.required),
-  });
-
-  public fileMessage = 'There is no selected file';
-  public formData = new FormData();
-  public fileName = '';
-  public publicURL = '';
-  public percent = 0;
-  public finalized = false;
-
   constructor(
     private firebaseStorage: FirestoreService,
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {
   }
 
@@ -33,26 +24,8 @@ export class ImagesContainerComponent implements OnInit {
     this.getImages();
   }
 
-  public setFiles(event): void {
-    if (event.length > 0) {
-      for (let file of event) {
-        this.fileMessage = `Ready File: ${file.name}`;
-        this.fileName = file.name;
-        this.formData.delete('file');
-        this.formData.append('file', file, file.name);
-      }
-    } else {
-      this.fileMessage = ' there is no selected file';
-    }
-  }
-
-  public fileUpload(): void {
-    const file = this.formData.get('file');
-    const referencia = this.firebaseStorage.cloudStorageRef(this.fileName);
-    const tarea = this.firebaseStorage.cloudStorageTask(this.fileName, file);
-  }
-
   public getImages(): void {
+    this.imageUrls = [];
     this.firebaseStorage.getImagesCloudStorage().subscribe(response => {
       response.items.forEach(folderRef => {
         this.displayImage(folderRef);
@@ -71,10 +44,22 @@ export class ImagesContainerComponent implements OnInit {
     });
   }
 
-  public openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
+  public openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, {
       duration: 5000,
     });
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ImagePreviewerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        //this timeout is till handle the loaded.
+        setTimeout(() => {
+          this.getImages();
+        }, 2000);
+      }
+    });
+  }
 }

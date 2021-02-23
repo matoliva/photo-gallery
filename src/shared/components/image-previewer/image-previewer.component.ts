@@ -1,4 +1,6 @@
 import { Component, ViewChild, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-image-previewer',
@@ -12,20 +14,54 @@ export class ImagePreviewerComponent {
 
   imageError = false;
 
+  public formData = new FormData();
+  public formFile = new FormGroup({
+    file: new FormControl(null, Validators.required),
+  });
+
+  public fileMessage = 'There is no selected file';
+  public fileName = '';
+  public publicURL = '';
+  public percent = 0;
+  public finalized = false;
+
+
   acceptedFormats: string[] = ['.jpg', 'jpeg', '.png'];
   allowedFormatsFileReader: string[] = ['image/jpg', 'image/jpeg', 'image/png'];
   fileReaderArray;
   readers: FileReader[] = [];
 
-  constructor(private renderer: Renderer2) { }
+  constructor(
+    private renderer: Renderer2,
+    private firebaseStorage: FirestoreService) { }
 
   fileInputchange(event): void {
     if (this.isValidImage(event)) {
       this.fileReaderArray = this.createPreviewImages(event);
-      this.files.emit(this.fileReaderArray);
+      this.setFiles(this.fileReaderArray);
     }
   }
 
+  private setFiles(event): void {
+    if (event.length > 0) {
+      for (let file of event) {
+        this.fileMessage = `Ready File: ${file.name}`;
+        this.fileName = file.name;
+        this.formData.append('file', file, file.name);
+      }
+    } else {
+      this.fileMessage = ' there is no selected file';
+    }
+  }
+
+  public fileUpload(): void {
+    const files: any = this.formData.getAll('file');
+    for (let file of files) {
+      const referencia = this.firebaseStorage.cloudStorageRef(file.name);
+      const tarea = this.firebaseStorage.cloudStorageTask(file.name, file);
+    }
+  }
+  
   private deleteAllChildNodes(parentNode): void {
     while (parentNode.firstChild) {
       parentNode.removeChild(parentNode.firstChild);
@@ -77,7 +113,7 @@ export class ImagePreviewerComponent {
     if (typeof indexToRemove === 'number') {
       this.fileReaderArray.splice(indexToRemove, 1);
     }
-    this.files.emit(this.fileReaderArray);
+    this.setFiles(this.fileReaderArray);
   }
 
   private isValidImage(event): boolean {

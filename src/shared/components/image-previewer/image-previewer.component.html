@@ -1,17 +1,16 @@
 <div class="image-previewer">
-    <input 
-        #inputFile 
-        type="file" 
-        multiple 
-        hidden="true" 
-        accept="{{ acceptedFormats.toString() }}"
-        (change)="fileInputchange($event)" />
-    <button 
-        class="image-previewer__add-image"
-        mat-fab color="primary" 
-        (click)="inputFile.click()">
-        <span class="material-icons">add</span>
-    </button>
-    <div #images id="images" class="image-previewer__images"> </div>
-    <span *ngIf="imageError">El formato del archivo no está permitido</span>
+    <h2>Choose your images from desktop</h2>
+    <mat-dialog-content>
+        <input #inputFile type="file" multiple hidden="true" accept="{{ acceptedFormats.toString() }}"
+            (change)="fileInputchange($event)" />
+        <button class="image-previewer__add-image" mat-fab color="primary" (click)="inputFile.click()">
+            <span class="material-icons">add</span>
+        </button>
+        <div #images id="images" class="image-previewer__images"> </div>
+        <span *ngIf="imageError">El formato del archivo no está permitido</span>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button [mat-dialog-close]="true" (click)="fileUpload()" cdkFocusInitial>Upload</button>
+      </mat-dialog-actions>
 </div>

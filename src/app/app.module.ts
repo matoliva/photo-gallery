@@ -10,6 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ImagesContainerComponent } from './components/images-container/images-container.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -23,8 +27,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AngularFireStorageModule,
     ReactiveFormsModule,
     MatSnackBarModule,
-    BrowserAnimationsModule
-    
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

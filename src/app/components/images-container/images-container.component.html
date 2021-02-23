@@ -1,13 +1,15 @@
-<form [formGroup]="formFile">
-    <app-image-previewer (files)="setFiles($event)"></app-image-previewer>
-    <button (click)="fileUpload()">file upload</button>
-</form>
+<header>
+    <mat-toolbar color="primary">
+        <span>Photo Gallery</span>
+        <button (click)="openDialog()" mat-icon-button class="example-icon"
+            aria-label="Example icon-button with share icon">
 
+            <mat-icon>file_upload</mat-icon>
+        </button>
+    </mat-toolbar>
+</header>
 <div class="images">
     <div *ngFor="let url of imageUrls">
-        <img 
-            [src]="url"
-            [ngStyle]="{'background-image':'url(' + url + ')', 'background-size':'cover'}"
-            alt="image">
+        <img [src]="url" [ngStyle]="{'background-image':'url(' + url + ')', 'background-size':'cover'}" alt="image">
     </div>
 </div>

@@ -1,21 +1,9 @@
 .image-previewer {
-    width: 100%;
+    max-width: 800px;
     position: relative;
 
     &__images {
-        display: inline-block;
-        &:hover{
-            &::after {
-                position: absolute;
-                content: 'x';
-                bottom: 44px;
-                left: 33px;
-                color: black;
-                font-weight: 600;
-                font-size: 2rem;
-                font-family: Arial, sans-serif;
-            }
-        }
+        display: flex;
     }
 
     &__add-image {
