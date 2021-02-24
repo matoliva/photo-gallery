@@ -43,6 +43,7 @@ export class ImagePreviewerComponent {
   }
 
   private setFiles(event): void {
+    this.formData.delete('file');
     if (event.length > 0) {
       for (let file of event) {
         this.fileMessage = `Ready File: ${file.name}`;

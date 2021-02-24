@@ -1,14 +1,27 @@
 .images {
     display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 img {
     width: 200px;
     height: 300px;
-    margin-right: 0.4rem;
+    border-radius: 5px;
     margin-top: 0.4rem;
 }
 
 .mat-toolbar.mat-primary {
     justify-content: space-between;
 }
+
+@media (max-width: 300px) {
+    .images {
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+    }
+    img {
+        
+    }
+  }
